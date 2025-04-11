@@ -1,10 +1,9 @@
 package com.crayon.register.controller;
 
-import com.crayon.register.model.ServerInstance;
+import com.crayon.register.model.Instance;
 import com.crayon.register.service.RegistryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,12 +24,12 @@ public class RegistryController {
     private RegistryService registryService;
 
     @PostMapping("/add")
-    public void register(@RequestBody ServerInstance instance) {
+    public void register(@RequestBody Instance instance) {
         registryService.register(instance.getServerName(), instance);
     }
 
     @PostMapping("/heartbeat")
-    public void heartbeat(@RequestBody ServerInstance instance) {
+    public void heartbeat(@RequestBody Instance instance) {
         registryService.heartbeat(instance);
     }
 

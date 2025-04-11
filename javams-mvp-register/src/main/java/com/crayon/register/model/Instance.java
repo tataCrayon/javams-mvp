@@ -1,6 +1,8 @@
 package com.crayon.register.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 服务实例对象，用于对外提供通信方式或其他关键信息
@@ -14,11 +16,13 @@ import lombok.Data;
  * @date 2025/4/7
  */
 @Data
-public class ServerInstance {
+@AllArgsConstructor
+@NoArgsConstructor
+public class Instance {
 
     /**
      * 实例id
-     *
+     * <p>
      * 使用整数类型，相较于字符串类型，占用空间小，且可排序。
      * 而且服务应该不会意外耗尽整数，所以使用整数类型。
      */
@@ -54,6 +58,18 @@ public class ServerInstance {
      */
     private Long lastHeartbeat;
 
+    /**
+     * 健康状态
+     * <p>
+     * 用于实现健康阈值保护逻辑
+     */
+    private boolean healthy;
+
+    public Instance(String ip, int port, boolean healthy) {
+        this.ip = ip;
+        this.port = port;
+        this.healthy = healthy;
+    }
 
     public enum Status {
         ONLINE(1),

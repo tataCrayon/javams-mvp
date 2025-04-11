@@ -1,6 +1,6 @@
 package com.crayon.server;
 
-import com.crayon.register.model.ServerInstance;
+import com.crayon.register.model.Instance;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,17 +18,17 @@ import javax.annotation.PostConstruct;
 @Component
 public class HeartbeatClient {
     private final RestTemplate restTemplate = new RestTemplate();
-    private ServerInstance instance ;
+    private Instance instance;
 
 
     @PostConstruct
     public void init() {
-        this.instance = new ServerInstance();
+        this.instance = new Instance();
         instance.setId(1);
         instance.setIp("127.0.0.1");
         instance.setPort(9081);
         instance.setServerName("user-service");
-        instance.setStatus(ServerInstance.Status.ONLINE);
+        instance.setStatus(Instance.Status.ONLINE);
     }
 
     /**
@@ -40,7 +40,7 @@ public class HeartbeatClient {
             String url = "http://localhost:8080/register/heartbeat";
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<ServerInstance> request = new HttpEntity<>(instance, headers);
+            HttpEntity<Instance> request = new HttpEntity<>(instance, headers);
             restTemplate.postForObject(url, request, Void.class);
             log.info("Heartbeat sent successfully: {}", instance);
         } catch (Exception e) {
@@ -56,7 +56,7 @@ public class HeartbeatClient {
             String url = "http://localhost:8080/register/add";
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<ServerInstance> request = new HttpEntity<>(instance, headers);
+            HttpEntity<Instance> request = new HttpEntity<>(instance, headers);
             restTemplate.postForObject(url, request, Void.class);
             log.info("Service registered on startup: {}", instance);
         } catch (Exception e) {
