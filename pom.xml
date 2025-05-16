@@ -10,6 +10,7 @@
     <description>Demo project for Spring Boot</description>
     <modules>
         <module>javams-mvp-register</module>
+        <module>javams-mvp-datashare</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>
