@@ -1,0 +1,39 @@
+@startuml 生产级订单超时关单UML时序图
+
+participant 用户 as User
+participant 订单服务 as OrderService
+participant 消息队列 as MQ
+participant 支付服务 as PaymentService
+participant 定时任务 as Scheduler
+
+activate OrderService
+
+User -> OrderService: 提交订单
+OrderService -> OrderService: 生成订单（状态=待支付）
+OrderService --> MQ: 发送延迟消息（延迟15分钟）
+OrderService -> User: 返回订单ID
+
+... 15分钟后 ...
+
+MQ -> OrderService: 触发延迟消息
+activate OrderService
+
+OrderService -> PaymentService: 查询支付状态
+alt 未支付
+    OrderService -> OrderService: 更新订单状态=已关闭
+    OrderService -> 库存服务: 释放库存（异步）
+else 已支付
+    OrderService --> MQ: 确认消息消费
+end
+
+deactivate OrderService
+
+|||
+activate Scheduler
+Scheduler -> OrderService: 扫描超时订单（兜底）
+OrderService -> PaymentService: 批量查询支付状态
+OrderService -> OrderService: 批量关闭未支付订单
+Scheduler <-- OrderService: 返回处理结果
+deactivate Scheduler
+
+@enduml
